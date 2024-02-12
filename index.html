@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Projet Geoserver</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
+    
     <style>
         body {
             margin: 0;
@@ -118,6 +120,7 @@
     <!-- Ajout de la balise div pour afficher la boussole -->
     <div class="leaflet-control-compass"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-minimap/dist/Control.MiniMap.min.js"></script>
     <script>
         var map = L.map('map').setView([43.3852106, 1.4012156], 12); // Centre de la carte et niveau de zoom
     
@@ -159,6 +162,11 @@
 map.addLayer(wmsLayers['Classification niveau 3']); // Ajouter la couche à la carte par défaut
 // Ajout du contrôle d'échelle
 L.control.scale().addTo(map);
+
+// Ajout de la minimap
+basemapUrl = 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+var basemap = new L.TileLayer(basemapUrl, {minZoom: 0,maxZoom: 13});
+var minMap = new L.Control.MiniMap(basemap, { toggleDisplay: true }).addTo(map);
 
 
     </script>
