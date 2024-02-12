@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projet Geoserver</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Lexend&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+        .header, .map-container, .comments {
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            background-color: #f0f0f0;
+        }
+        .header .logo-left {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 10%; /* Ajustez la taille du logo */
+            height: auto; /* Hauteur automatique pour conserver les proportions */
+        }
+        .header .logo-right {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 10%; /* Ajustez la taille du logo */
+            height: auto; /* Hauteur automatique pour conserver les proportions */
+        }
+        .map-container {
+            height: 500px; /* Ajustez la hauteur selon vos besoins */
+        }
+        .comments {
+            background-color: #f9f9f9;
+            text-align: center;
+            font-size: 0.9em;
+            color: #717171;
+        }
+
+        h1{
+            text-align: center; 
+            font-size: 2em;
+            margin: 0;
+            text-transform: uppercase;
+            color: #717171;
+            text-shadow: 0 0 5px #fff; /* Contour blanc */
+        }
+
+        .map-container {
+            position: relative; /* Permet de positionner l'image par rapport à cette div */
+            height: 500px;
+            z-index: 0;
+        }
+        .map-container img {
+            position: absolute;
+            bottom: 10px; /* Distance par rapport au bas */
+            left: 10px; /* Distance par rapport à la gauche */
+            width: 210px; /* Largeur de l'image */
+            height: 35%; /* Hauteur automatique pour conserver les proportions */
+            z-index: 1000; /* Place l'image au-dessus de la carte */
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="images/logo_sigma.png" alt="Logo Sigma" class="logo-left">
+        <h1>Classification de la BD Forêt</h1>
+        <img src="images/logo_ut2j.png" alt="Logo UT2J" class="logo-right">
+        <br>
+    </div>
+
+    <div class="map-container" id="map">
+        <!-- Ajoutez une image à l'intérieur de la div .map-container -->
+        <img src="images/legende_carte_essence_lvl3_2.png" alt="Legende">
+    </div>
+
+    <div class="comments">
+        <p><i>Cette carte permet d'observer les résultats de la classification de la BD Forêt réalisée dans le cadre du projet de télédétection du master 2 SIGMA.
+            <br> La couche ''Classification niveau 3" correspond à la prédiction obtenue avec notre modèle et la couche 'Echantillon BD Foret' correspond à la réalité sur le terrain.
+    </div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([43.4012106, 1.4112156], 11); // Centre de la carte et niveau de zoom
+    
+        // Ajout de la couche OpenStreetMap
+
+        var Stadia_AlidadeSmooth = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.{ext}', {
+            minZoom: 0,
+            maxZoom: 20,
+            attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            ext: 'png'
+        }).addTo(map);
+    
+        // Ajout des couches WMS
+        var wmsLayers = {
+            'Classification niveau 3': L.tileLayer.wms('https://geotests.net/geoserver/vjourdai/wms', {
+                layers: 'vjourdai:carte_essences_lvl3_06',
+                format: 'image/png',
+                transparent: true,
+                attribution: 'Groupe 6',
+                styles: 'style_carte_essence_lvl3_vj',
+            }),
+            'Echantillon BD Foret': L.tileLayer.wms('https://geotests.net/geoserver/vjourdai/wms', {
+                layers: 'vjourdai:Sample_BD_foret_T31TCJ_06',
+                format: 'image/png',
+                transparent: true,
+                attribution: 'Groupe 6',
+                styles: 'style_echantillon_06',
+            })
+        };
+    
+        L.control.layers({
+            'Stadia_AlidadeSmooth': Stadia_AlidadeSmooth
+        }, {
+         'Classification niveau 3': wmsLayers['Classification niveau 3'], // Ajout de la couche avec l'index correspondant
+            'Echantillon BD Foret': wmsLayers['Echantillon BD Foret']
+            }, {
+          collapsed: true // Développer le contrôle des couches par défaut
+        }).addTo(map);
+
+map.addLayer(wmsLayers['Classification niveau 3']); // Ajouter la couche à la carte par défaut
+
+    </script>
+</body>
+</html>
