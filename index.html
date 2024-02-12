@@ -59,13 +59,40 @@
             height: 500px;
             z-index: 0;
         }
-        .map-container img {
+        .premiere-image{
             position: absolute;
-            bottom: 10px; /* Distance par rapport au bas */
+            bottom: 60px; /* Distance par rapport au bas */
             left: 10px; /* Distance par rapport à la gauche */
             width: 210px; /* Largeur de l'image */
             height: 35%; /* Hauteur automatique pour conserver les proportions */
             z-index: 1000; /* Place l'image au-dessus de la carte */
+        }
+        .deuxieme-image{
+            position: absolute;
+            bottom: 4px; /* Distance par rapport au bas */
+            left: 110px; /* Distance par rapport à la gauche */
+            width: 50px; /* Largeur de l'image */
+            height: 10%; /* Hauteur automatique pour conserver les proportions */
+            z-index: 1000; /* Place l'image au-dessus de la carte */
+        }
+        .map-container map {
+            position: absolute;
+            bottom: 60px; /* Distance par rapport au bas */
+            left: 10px; /* Distance par rapport à la gauche */
+            width: 210px; /* Largeur de l'image */
+            height: 35%; /* Hauteur automatique pour conserver les proportions */
+            z-index: 1000; /* Place l'image au-dessus de la carte */
+        }
+        .leaflet-control-scale {
+            background: white;
+            padding: 5px 10px;
+            box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            font-size: 12px;
+            line-height: 1.5;
+            font-weight: 700;
+            color: black;
+            border: 2px solid rgba(0, 0, 0, 0.2);
         }
 
     </style>
@@ -80,14 +107,16 @@
 
     <div class="map-container" id="map">
         <!-- Ajoutez une image à l'intérieur de la div .map-container -->
-        <img src="images/legende_carte_essence_lvl3_2.png" alt="Legende">
+        <img src="images/legende_carte_essence_lvl3_2.png" alt="Legende"  class="premiere-image">
+        <img src="images/fleche_nord.jpg" alt="Description de la deuxième image" class="deuxieme-image">
     </div>
 
     <div class="comments">
         <p><i>Cette carte permet d'observer les résultats de la classification de la BD Forêt réalisée dans le cadre du projet de télédétection du master 2 SIGMA.
             <br> La couche ''Classification niveau 3" correspond à la prédiction obtenue avec notre modèle et la couche 'Echantillon BD Foret' correspond à la réalité sur le terrain.
     </div>
-
+    <!-- Ajout de la balise div pour afficher la boussole -->
+    <div class="leaflet-control-compass"></div>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
         var map = L.map('map').setView([43.3852106, 1.4112156], 12); // Centre de la carte et niveau de zoom
@@ -128,6 +157,9 @@
         }).addTo(map);
 
 map.addLayer(wmsLayers['Classification niveau 3']); // Ajouter la couche à la carte par défaut
+// Ajout du contrôle d'échelle
+L.control.scale().addTo(map);
+
 
     </script>
 </body>
